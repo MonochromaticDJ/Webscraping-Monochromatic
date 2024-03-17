@@ -1,14 +1,19 @@
 import pandas as pd
 import dash
+import pathlib
 from dash import dcc, html
 from dash.dependencies import Input, Output
 import plotly.graph_objects as go
+
+PATH = pathlib.Path(__file__).parent
+DATA_PATH = PATH.joinpath("data").resolve
 
 # Load the 'name', 'price', 'link' columns from 'xkomwithlinks.xlsx'
 df_all = pd.read_excel('xkomwithlinks.xlsx', usecols=['name', 'price', 'link'])
 
 # Initialize the Dash app
 app = dash.Dash(__name__)
+server = app.server
 
 # Layout of the app
 app.layout = html.Div([
@@ -42,7 +47,7 @@ def update_chart(search_value):
         marker=dict(
             color=filtered_df['price'],  # Use price values for color
             colorscale='Cividis',
-            colorbar=dict(title='Price'),  # Optional: Add a colorbar for reference
+            
         ),
         hoverinfo='text',
         hovertext=filtered_df.apply(
@@ -91,4 +96,4 @@ def update_chart(search_value):
 
 # Run the app
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=False)
